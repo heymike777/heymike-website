@@ -1,6 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-R9MVGF2419"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-R9MVGF2419');
+    </script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mike - builder, founder, indie hacker</title>
@@ -282,6 +290,38 @@
             </div>
         </section>
 
+        <!-- Partners -->
+        <section class="section">
+            <h2 class="section-header">Partners</h2>
+            <div class="projects-grid">
+
+                <!-- Nomadz -->
+                <div class="partner-card" data-url="https://nomadz.xyz/sign-up?referralCode=mike">
+                    <div class="partner-name">Nomadz</div>
+                    <p class="partner-desc">Book hotels with crypto and save up to 60% on 1M+ stays worldwide.</p>
+                </div>
+
+                <!-- Jupiter -->
+                <div class="partner-card" data-url="https://jup.ag/?ref=pgaimp1x4kiy">
+                    <div class="partner-name">Jupiter</div>
+                    <p class="partner-desc">The most powerful superapp on Solana.</p>
+                </div>
+
+                <!-- Trojan Terminal -->
+                <div class="partner-card" data-url="https://trojan.com/@heymike">
+                    <div class="partner-name">Trojan Terminal</div>
+                    <p class="partner-desc">The most powerful trading terminal on Solana.</p>
+                </div>
+
+                <!-- Trojan Telegram Bot -->
+                <div class="partner-card" data-url="https://t.me/solana_trojanbot?start=r-heymike777">
+                    <div class="partner-name">Trojan Telegram Bot</div>
+                    <p class="partner-desc">OG trading telegram bot.</p>
+                </div>
+
+            </div>
+        </section>
+
         <!-- Footer -->
         <footer class="footer">
             <p><span class="prompt">~$</span> exit 0</p>
@@ -289,10 +329,34 @@
 
     </div>
     <script>
-        document.querySelectorAll('.project-card[data-url]').forEach(function(card) {
+        // Click-to-open for project and partner cards
+        document.querySelectorAll('.project-card[data-url], .partner-card[data-url]').forEach(function(card) {
             card.addEventListener('click', function(e) {
                 if (e.target.closest('a')) return;
+                var name = card.querySelector('.project-name, .partner-name');
+                var section = card.closest('.section').querySelector('.section-header');
+                gtag('event', 'click', {
+                    event_category: section ? section.textContent.trim() : 'unknown',
+                    event_label: name ? name.textContent.trim() : card.dataset.url,
+                    transport_type: 'beacon'
+                });
                 window.open(card.dataset.url, '_blank', 'noopener');
+            });
+        });
+
+        // Track all link clicks (socials, project links, labels)
+        document.querySelectorAll('a[href]').forEach(function(link) {
+            link.addEventListener('click', function() {
+                var label = link.textContent.trim() || link.title || link.href;
+                var category = 'link';
+                if (link.classList.contains('social-link')) category = 'social';
+                else if (link.classList.contains('project-link')) category = 'project_link';
+                else if (link.classList.contains('label-token')) category = 'token_link';
+                gtag('event', 'click', {
+                    event_category: category,
+                    event_label: label,
+                    transport_type: 'beacon'
+                });
             });
         });
     </script>

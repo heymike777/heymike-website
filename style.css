@@ -305,6 +305,37 @@ a:hover {
     flex-shrink: 0;
 }
 
+/* Partner Cards */
+.partner-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-left: 3px solid #fb923c;
+    border-radius: 6px;
+    padding: 20px;
+    cursor: pointer;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.partner-card:hover {
+    border-color: var(--border-hover);
+    border-left-color: #fb923c;
+    box-shadow: 0 0 20px rgba(251, 146, 60, 0.05);
+}
+
+.partner-name {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--text-bright);
+    margin-bottom: 8px;
+}
+
+.partner-desc {
+    font-size: 13px;
+    color: var(--text);
+    font-weight: 300;
+    line-height: 1.5;
+}
+
 /* Sunset Cards */
 .sunset-card {
     opacity: 0.5;
