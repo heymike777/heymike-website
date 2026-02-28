@@ -305,6 +305,15 @@ a:hover {
     flex-shrink: 0;
 }
 
+/* Featured Cards */
+.featured-card {
+    border-left: 3px solid var(--green);
+}
+
+.featured-card:hover {
+    box-shadow: 0 0 20px var(--green-glow);
+}
+
 /* Partner Cards */
 .partner-card {
     background: var(--bg-card);
