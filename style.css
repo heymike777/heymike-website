@@ -196,6 +196,11 @@ a:hover {
     color: var(--text-bright);
 }
 
+.project-labels {
+    display: flex;
+    gap: 6px;
+}
+
 .project-label {
     font-size: 11px;
     font-weight: 500;
@@ -229,6 +234,24 @@ a:hover {
     background: rgba(192, 132, 252, 0.15);
     text-decoration: none;
     opacity: 1;
+}
+
+.label-winner {
+    color: #ffd700;
+    background: rgba(255, 215, 0, 0.08);
+    border: 1px solid rgba(255, 215, 0, 0.2);
+}
+
+.label-nft {
+    color: #f472b6;
+    background: rgba(244, 114, 182, 0.08);
+    border: 1px solid rgba(244, 114, 182, 0.2);
+}
+
+.label-grant {
+    color: #60a5fa;
+    background: rgba(96, 165, 250, 0.08);
+    border: 1px solid rgba(96, 165, 250, 0.2);
 }
 
 .label-shutdown {
