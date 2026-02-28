@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;700&display=swap');
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+    width: 1200px;
+    height: 630px;
+    font-family: 'JetBrains Mono', monospace;
+    background: #0a0a0a;
+    color: #b0b0b0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    position: relative;
+}
+
+/* Scanline overlay */
+body::after {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    pointer-events: none;
+    background: repeating-linear-gradient(
+        0deg,
+        transparent, transparent 2px,
+        rgba(0, 0, 0, 0.04) 2px,
+        rgba(0, 0, 0, 0.04) 4px
+    );
+    z-index: 10;
+}
+
+/* Subtle green vignette glow */
+body::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: radial-gradient(ellipse at center, rgba(0,255,65,0.03) 0%, transparent 70%);
+    pointer-events: none;
+    z-index: 1;
+}
+
+.card {
+    display: flex;
+    align-items: center;
+    gap: 48px;
+    padding: 60px 80px;
+    position: relative;
+    z-index: 5;
+}
+
+.avatar {
+    width: 180px;
+    height: 180px;
+    border-radius: 50%;
+    border: 3px solid #00ff41;
+    box-shadow: 0 0 30px rgba(0,255,65,0.2), 0 0 60px rgba(0,255,65,0.05);
+    flex-shrink: 0;
+}
+
+.info {
+    flex: 1;
+}
+
+.name {
+    font-size: 52px;
+    font-weight: 700;
+    color: #00ff41;
+    letter-spacing: -1px;
+    margin-bottom: 8px;
+}
+
+.cursor {
+    display: inline-block;
+    width: 3px;
+    height: 44px;
+    background: #00ff41;
+    margin-left: 6px;
+    vertical-align: middle;
+}
+
+.bio {
+    font-size: 22px;
+    font-weight: 300;
+    color: #b0b0b0;
+    margin-bottom: 28px;
+}
+
+.bio .prompt {
+    color: #00cc33;
+    margin-right: 8px;
+}
+
+.socials {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 20px;
+}
+
+.social {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    font-size: 15px;
+    color: #888;
+}
+
+.social svg {
+    width: 16px;
+    height: 16px;
+    flex-shrink: 0;
+}
+
+.projects {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.tag {
+    font-size: 15px;
+    font-weight: 500;
+    padding: 6px 14px;
+    border-radius: 4px;
+    border: 1px solid #1a1a1a;
+    color: #e0e0e0;
+    background: #111111;
+}
+
+.url {
+    position: absolute;
+    bottom: 40px;
+    right: 80px;
+    font-size: 16px;
+    color: #00cc33;
+    opacity: 0.6;
+    z-index: 5;
+}
+
+/* Corner decorations */
+.corner {
+    position: absolute;
+    width: 40px;
+    height: 40px;
+    z-index: 5;
+}
+.corner-tl { top: 24px; left: 24px; border-top: 2px solid #1a1a1a; border-left: 2px solid #1a1a1a; }
+.corner-tr { top: 24px; right: 24px; border-top: 2px solid #1a1a1a; border-right: 2px solid #1a1a1a; }
+.corner-bl { bottom: 24px; left: 24px; border-bottom: 2px solid #1a1a1a; border-left: 2px solid #1a1a1a; }
+.corner-br { bottom: 24px; right: 24px; border-bottom: 2px solid #1a1a1a; border-right: 2px solid #1a1a1a; }
+</style>
+</head>
+<body>
+    <div class="corner corner-tl"></div>
+    <div class="corner corner-tr"></div>
+    <div class="corner corner-bl"></div>
+    <div class="corner corner-br"></div>
+
+    <div class="card">
+        <img src="../files/avatar-big.png" class="avatar" alt="Mike">
+        <div class="info">
+            <div class="name">Mike<span class="cursor"></span></div>
+            <div class="bio"><span class="prompt">~$</span> builder · founder · indie hacker</div>
+            <div class="socials">
+                <span class="social">
+                    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+                    heymike777
+                </span>
+                <span class="social">
+                    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69a.2.2 0 00-.05-.18c-.06-.05-.14-.03-.21-.02-.09.02-1.49.95-4.22 2.79-.4.27-.76.41-1.08.4-.36-.01-1.04-.2-1.55-.37-.63-.2-1.12-.31-1.08-.66.02-.18.27-.36.74-.55 2.92-1.27 4.86-2.11 5.83-2.51 2.78-1.16 3.35-1.36 3.73-1.36.08 0 .27.02.39.12.1.08.13.19.14.27-.01.06.01.24 0 .38z"/></svg>
+                    founders_journey
+                </span>
+                <span class="social">
+                    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>
+                    heymike777
+                </span>
+            </div>
+            <div class="projects">
+                <span class="tag">Cashflow</span>
+                <span class="tag">Lumenless</span>
+                <span class="tag">Gated</span>
+                <span class="tag">Danger Valley</span>
+                <span class="tag">Claim Fund</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="url">heymike.io</div>
+</body>
+</html>
