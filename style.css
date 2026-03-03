@@ -314,6 +314,42 @@ a:hover {
     box-shadow: 0 0 20px var(--green-glow);
 }
 
+/* Win Cards */
+.win-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-left: 3px solid #ffd700;
+    border-radius: 6px;
+    padding: 20px;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.win-card:hover {
+    border-color: var(--border-hover);
+    border-left-color: #ffd700;
+    box-shadow: 0 0 20px rgba(255, 215, 0, 0.05);
+}
+
+.win-name {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--text-bright);
+    margin-bottom: 4px;
+}
+
+.win-project {
+    font-size: 12px;
+    color: #ffd700;
+    margin-bottom: 8px;
+}
+
+.win-desc {
+    font-size: 13px;
+    color: var(--text);
+    font-weight: 300;
+    line-height: 1.5;
+}
+
 /* Partner Cards */
 .partner-card {
     background: var(--bg-card);
