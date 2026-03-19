@@ -107,6 +107,39 @@ a:hover {
     margin-right: 6px;
 }
 
+/* Hero Highlight */
+.hero-highlight {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 14px;
+    font-size: 13px;
+    color: var(--text);
+    padding: 6px 14px;
+    background: rgba(192, 132, 252, 0.06);
+    border: 1px solid rgba(192, 132, 252, 0.2);
+    border-radius: 4px;
+}
+
+.hero-highlight a {
+    color: #c084fc;
+    font-weight: 500;
+}
+
+.highlight-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #c084fc;
+    animation: pulse-dot 2s ease-in-out infinite;
+    flex-shrink: 0;
+}
+
+@keyframes pulse-dot {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.3; }
+}
+
 /* Socials */
 .socials {
     display: flex;
