@@ -445,6 +445,10 @@ a:hover {
         justify-content: center;
     }
 
+    .hero-highlights {
+        justify-content: center;
+    }
+
     .projects-grid {
         grid-template-columns: 1fr;
     }
