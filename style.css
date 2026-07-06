@@ -151,6 +151,70 @@ a:hover {
     opacity: 1;
 }
 
+/* CTA Banner */
+.cta-banner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    flex-wrap: wrap;
+    background: linear-gradient(135deg, var(--green-glow), var(--green-subtle));
+    border: 1px solid rgba(0, 255, 65, 0.25);
+    border-radius: 6px;
+    padding: 18px 24px;
+    margin-bottom: 48px;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.cta-banner:hover {
+    border-color: var(--green);
+    box-shadow: 0 0 24px var(--green-glow);
+    text-decoration: none;
+    opacity: 1;
+}
+
+.cta-text {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.cta-title {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--green);
+}
+
+.cta-title .prompt {
+    color: var(--green-dim);
+    margin-right: 6px;
+}
+
+.cta-subtitle {
+    font-size: 13px;
+    color: var(--text);
+    font-weight: 300;
+}
+
+.cta-action {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--bg);
+    background: var(--green);
+    padding: 8px 18px;
+    border-radius: 4px;
+    white-space: nowrap;
+    flex-shrink: 0;
+    transition: background 0.2s;
+}
+
+.cta-banner:hover .cta-action {
+    background: var(--green-dim);
+}
+
 /* Socials */
 .socials {
     display: flex;
@@ -499,6 +563,16 @@ a:hover {
 
     .hero-name {
         font-size: 24px;
+    }
+
+    .cta-banner {
+        flex-direction: column;
+        align-items: stretch;
+        text-align: center;
+    }
+
+    .cta-action {
+        justify-content: center;
     }
 }
 
