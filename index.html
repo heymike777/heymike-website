@@ -483,6 +483,25 @@
             </div>
         </section>
 
+        <!-- Domains for sale -->
+        <section class="section">
+            <h2 class="section-header">Domains for sale</h2>
+            <div class="domains-grid">
+                <a href="mailto:mike@dangervalley.com?subject=Interested%20in%20bonk.app" class="domain-card">
+                    <span class="domain-name">bonk.app</span>
+                    <span class="domain-action">Make an offer →</span>
+                </a>
+                <a href="mailto:mike@dangervalley.com?subject=Interested%20in%20light.app" class="domain-card">
+                    <span class="domain-name">light.app</span>
+                    <span class="domain-action">Make an offer →</span>
+                </a>
+                <a href="mailto:mike@dangervalley.com?subject=Interested%20in%20gmgn.io" class="domain-card">
+                    <span class="domain-name">gmgn.io</span>
+                    <span class="domain-action">Make an offer →</span>
+                </a>
+            </div>
+        </section>
+
         <!-- Looking for a job -->
         <section class="section">
             <h2 class="section-header">Looking for a job</h2>
@@ -537,6 +556,7 @@
                 if (link.classList.contains('social-link')) category = 'social';
                 else if (link.classList.contains('project-link')) category = 'project_link';
                 else if (link.classList.contains('label-token')) category = 'token_link';
+                else if (link.classList.contains('domain-card')) category = 'domain_inquiry';
                 gtag('event', 'click', {
                     event_category: category,
                     event_label: label,

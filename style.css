@@ -519,6 +519,57 @@ a:hover {
     line-height: 1.5;
 }
 
+/* Domains for sale */
+.domains-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 16px;
+}
+
+.domain-card {
+    display: flex;
+    min-height: 112px;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 20px;
+    padding: 20px;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--green);
+    border-radius: 6px;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.domain-card:hover {
+    border-color: var(--green-dim);
+    box-shadow: 0 0 20px var(--green-glow);
+    text-decoration: none;
+    opacity: 1;
+}
+
+.domain-card:focus-visible {
+    outline: 2px solid var(--green);
+    outline-offset: 3px;
+}
+
+.domain-name {
+    color: var(--text-bright);
+    font-size: 18px;
+    font-weight: 700;
+}
+
+.domain-action {
+    color: var(--green-dim);
+    font-size: 12px;
+    font-weight: 500;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .domain-card {
+        transition: none;
+    }
+}
+
 /* Sunset Cards */
 .sunset-card {
     opacity: 0.5;
@@ -563,6 +614,10 @@ a:hover {
     }
 
     .projects-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .domains-grid {
         grid-template-columns: 1fr;
     }
 
