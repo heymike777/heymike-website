@@ -299,6 +299,23 @@ a:hover {
     box-shadow: 0 0 20px rgba(0, 255, 65, 0.03);
 }
 
+.linked-project-card {
+    display: block;
+    color: inherit;
+}
+
+.linked-project-card:hover {
+    color: inherit;
+    text-decoration: none;
+    opacity: 1;
+}
+
+.linked-project-card:focus-visible {
+    border-color: var(--green);
+    outline: 2px solid var(--green);
+    outline-offset: 3px;
+}
+
 .project-header {
     display: flex;
     align-items: center;
