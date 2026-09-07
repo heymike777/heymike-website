@@ -522,6 +522,23 @@ a:hover {
     box-shadow: 0 0 20px rgba(251, 146, 60, 0.05);
 }
 
+.linked-partner-card {
+    display: block;
+    color: inherit;
+}
+
+.linked-partner-card:hover {
+    color: inherit;
+    text-decoration: none;
+    opacity: 1;
+}
+
+.linked-partner-card:focus-visible {
+    border-color: #fb923c;
+    outline: 2px solid #fb923c;
+    outline-offset: 3px;
+}
+
 .partner-name {
     font-size: 16px;
     font-weight: 700;
