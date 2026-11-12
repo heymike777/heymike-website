@@ -324,6 +324,20 @@ a:hover {
     gap: 10px;
 }
 
+.project-title {
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+    min-width: 0;
+}
+
+.project-icon {
+    width: 28px;
+    height: 28px;
+    flex-shrink: 0;
+    border-radius: 7px;
+}
+
 .project-name {
     font-size: 16px;
     font-weight: 700;
