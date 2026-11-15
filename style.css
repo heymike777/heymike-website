@@ -151,6 +151,19 @@ a:hover {
     opacity: 1;
 }
 
+.hero-highlight-factory {
+    color: var(--green);
+    background: var(--green-subtle);
+    border-color: rgba(0, 255, 65, 0.28);
+    transition: background 0.2s;
+}
+
+.hero-highlight-factory:hover {
+    background: rgba(0, 255, 65, 0.16);
+    text-decoration: none;
+    opacity: 1;
+}
+
 /* CTA Banner */
 .cta-stack {
     display: flex;
