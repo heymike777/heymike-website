@@ -60,12 +60,19 @@ module.exports = async function handler(req, res) {
     const peakMarketCap = Math.max(indexedPeak, historical.value);
     if (!Number.isFinite(peakMarketCap) || peakMarketCap <= 0) throw new Error('Invalid price history');
     const currentIsPeak = Number.isFinite(marketCap) && marketCap > peakMarketCap;
+    const priceHistory = candles
+      .filter(candle => Number.isFinite(Number(candle[0])) && Number(candle[0]) > 0 && Number.isFinite(Number(candle[4])) && Number(candle[4]) > 0)
+      .sort((a, b) => Number(b[0]) - Number(a[0]))
+      .slice(0, 30)
+      .map(candle => [Number(candle[0]), Number(candle[4])])
+      .reverse();
 
     res.setHeader('Cache-Control', 'public, s-maxage=3600, stale-while-revalidate=86400');
     return res.status(200).json({
       token: address,
       marketCap: Number.isFinite(marketCap) ? marketCap : null,
       peakMarketCap: Math.max(peakMarketCap, Number.isFinite(marketCap) ? marketCap : 0),
+      priceHistory,
       peakCandleUtc: currentIsPeak
         ? new Date().toISOString()
         : historical.value > indexedPeak ? historical.at : new Date(Number(highest[0]) * 1000).toISOString(),
