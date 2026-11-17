@@ -487,6 +487,29 @@ a:hover {
     flex-shrink: 0;
 }
 
+.whoaped-card .project-link {
+    min-width: 40px;
+    min-height: 40px;
+    justify-content: center;
+}
+
+.whoaped-card .project-link svg {
+    width: 18px;
+    height: 18px;
+}
+
+.whoaped-card .label-token {
+    display: inline-flex;
+    align-items: center;
+    min-height: 40px;
+}
+
+.whoaped-card .project-link:focus-visible,
+.whoaped-card .label-token:focus-visible {
+    outline: 2px solid var(--green);
+    outline-offset: 3px;
+}
+
 /* Featured Cards */
 .featured-card {
     border-left: 3px solid var(--green);
