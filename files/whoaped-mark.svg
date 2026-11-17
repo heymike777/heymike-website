@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" fill="none">
+  <title>WhoAped Detected mark</title>
+  <rect width="1024" height="1024" fill="#111313"/>
+  <path d="M362 204H250C224 204 204 224 204 250V362M662 204H774C800 204 820 224 820 250V362M362 820H250C224 820 204 800 204 774V662M662 820H774C800 820 820 800 820 774V662" stroke="#F4F4EF" stroke-width="76" stroke-linecap="round"/>
+  <path d="M322 512C370 426 432 382 512 382C592 382 654 426 702 512C654 598 592 642 512 642C432 642 370 598 322 512Z" stroke="#F4F4EF" stroke-width="66" stroke-linejoin="round"/>
+  <circle cx="512" cy="512" r="58" fill="#F04B2F"/>
+</svg>

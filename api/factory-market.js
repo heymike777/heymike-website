@@ -1,5 +1,6 @@
 const TOKENS = Object.freeze({
   wbcE7iMmWN1XGEa6mtgRS3FoLgc936rMJYjeujapump: '7LANrQamVd2VuAAuvUCkJu19iwqLc3DeBwVHP18XsNmh',
+  AFkMcpbnwEg328181CCresbTTG52DexwKM7FFo9Hpump: 'FKq5EtVeChSTXmWW7XwDKgkvsGMYvcboB7kDkMARFVUD',
   KxHGHaXXb1rtkUvZ4SNG5Xv1n1fNWJv4nWEBndppump: '5NTSdZzLs7N5eLbi4UjEPzUott3NgRSrYFNfKto6eNVw',
   '6Q5t5upWJwDocysAwR2zertE2EPxB3X1ek1HRoj4LUM': '2uoYsP4YxsSfdXj5NYQszsZQbW77J2ZHz4N8KV2sgbZL',
 });
@@ -7,6 +8,7 @@ const TOKENS = Object.freeze({
 const API = 'https://api.geckoterminal.com/api/v2/networks/solana';
 const headers = { Accept: 'application/json;version=20230203' };
 const LUMEN = '6Q5t5upWJwDocysAwR2zertE2EPxB3X1ek1HRoj4LUM';
+const WHOAPED = 'AFkMcpbnwEg328181CCresbTTG52DexwKM7FFo9Hpump';
 // Historical on-chain-derived daily market-cap snapshot from CoinGecko, 2026-11-15.
 // The free GeckoTerminal OHLCV API exposes only the latest 180 days for this older token.
 const lumenHistoricalFloor = { value: 291533.11273338075, at: '2025-12-28T00:00:00.000Z' };
@@ -31,22 +33,30 @@ module.exports = async function handler(req, res) {
   const pool = TOKENS[address];
 
   try {
-    const [tokenResult, candleResult, lumenHistory] = await Promise.all([
+    const [tokenResult, dailyResult, hourlyResult, lumenHistory] = await Promise.all([
       getJson(`${API}/tokens/${address}`),
       getJson(`${API}/pools/${pool}/ohlcv/day?aggregate=1&limit=1000&currency=usd&token=base`),
+      address === WHOAPED
+        ? getJson(`${API}/pools/${pool}/ohlcv/hour?aggregate=1&limit=720&currency=usd&token=base`).catch(() => null)
+        : Promise.resolve(null),
       address === LUMEN
         ? getJson('https://api.coingecko.com/api/v3/coins/lumen/market_chart?vs_currency=usd&days=365').catch(() => null)
         : Promise.resolve(null),
     ]);
     const token = tokenResult.data?.attributes;
-    const candles = candleResult.data?.attributes?.ohlcv_list;
-    const base = candleResult.meta?.base?.address;
+    const dailyCandles = dailyResult.data?.attributes?.ohlcv_list;
+    const availableHourly = hourlyResult?.meta?.base?.address === address
+      ? hourlyResult.data?.attributes?.ohlcv_list
+      : null;
+    const hourlyCandles = Array.isArray(availableHourly) ? availableHourly : [];
     const supply = Number(token?.normalized_total_supply);
-    if (base !== address || !Number.isFinite(supply) || supply <= 0 || !Array.isArray(candles) || !candles.length) {
+    if (dailyResult.meta?.base?.address !== address || !Number.isFinite(supply) || supply <= 0 || !Array.isArray(dailyCandles) || !dailyCandles.length) {
       throw new Error('Incomplete token or pool history');
     }
+    const interval = address === WHOAPED && dailyCandles.length < 7 && hourlyCandles.length >= 2 ? 'hour' : 'day';
+    const chartCandles = interval === 'hour' ? hourlyCandles : dailyCandles;
 
-    const highest = candles.reduce((best, candle) =>
+    const highest = [...dailyCandles, ...hourlyCandles].reduce((best, candle) =>
       Number(candle[2]) > Number(best[2]) ? candle : best);
     const marketCap = Number(token.market_cap_usd ?? token.fdv_usd);
     const indexedPeak = Number(highest[2]) * supply;
@@ -60,7 +70,7 @@ module.exports = async function handler(req, res) {
     const peakMarketCap = Math.max(indexedPeak, historical.value);
     if (!Number.isFinite(peakMarketCap) || peakMarketCap <= 0) throw new Error('Invalid price history');
     const currentIsPeak = Number.isFinite(marketCap) && marketCap > peakMarketCap;
-    const priceHistory = candles
+    const priceHistory = chartCandles
       .filter(candle => Number.isFinite(Number(candle[0])) && Number(candle[0]) > 0 && Number.isFinite(Number(candle[4])) && Number(candle[4]) > 0)
       .sort((a, b) => Number(b[0]) - Number(a[0]))
       .slice(0, 30)
@@ -73,12 +83,13 @@ module.exports = async function handler(req, res) {
       marketCap: Number.isFinite(marketCap) ? marketCap : null,
       peakMarketCap: Math.max(peakMarketCap, Number.isFinite(marketCap) ? marketCap : 0),
       priceHistory,
+      interval,
       peakCandleUtc: currentIsPeak
         ? new Date().toISOString()
         : historical.value > indexedPeak ? historical.at : new Date(Number(highest[0]) * 1000).toISOString(),
       method: address === LUMEN
         ? 'Maximum of primary-pool on-chain candle estimate and CoinGecko historical market-cap series'
-        : 'Highest USD daily candle in primary on-chain pool × current reported token supply',
+        : `Highest USD ${address === WHOAPED ? 'daily or hourly' : 'daily'} candle in primary on-chain pool × current reported token supply`,
       source: historical.value > indexedPeak
         ? 'https://www.coingecko.com/en/coins/lumen/historical_data'
         : `https://www.geckoterminal.com/solana/pools/${pool}`,

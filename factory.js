@@ -2,10 +2,13 @@ const currency = new Intl.NumberFormat('en-US', {
   style: 'currency', currency: 'USD', notation: 'compact', maximumFractionDigits: 1,
 });
 
-function renderPriceChart(card, history) {
+function renderPriceChart(card, history, interval = 'day') {
   const chart = card.querySelector('[data-chart]');
   const changeLabel = card.querySelector('[data-chart-change]');
+  const periodLabel = card.querySelector('[data-chart-period]');
   const rangeLabel = card.querySelector('[data-chart-range]');
+  const hourly = interval === 'hour';
+  periodLabel.textContent = hourly ? 'HOURLY' : 'LAST 30 DAYS';
   const points = Array.isArray(history)
     ? history.filter(point => Array.isArray(point) && Number.isFinite(point[0]) && Number.isFinite(point[1]) && point[1] > 0)
     : [];
@@ -31,13 +34,17 @@ function renderPriceChart(card, history) {
   const last = coordinates.at(-1);
   const area = `${line} L${last.x.toFixed(1)} ${height} L${pad} ${height} Z`;
   const change = (prices.at(-1) / prices[0] - 1) * 100;
-  const date = timestamp => new Intl.DateTimeFormat('en-US', { month: 'short', day: 'numeric', timeZone: 'UTC' }).format(new Date(timestamp * 1000));
+  const date = timestamp => new Intl.DateTimeFormat('en-US', {
+    month: 'short', day: 'numeric',
+    ...(hourly ? { hour: '2-digit', hourCycle: 'h23' } : {}),
+    timeZone: 'UTC',
+  }).format(new Date(timestamp * 1000));
 
   changeLabel.textContent = `${change >= 0 ? '+' : ''}${change.toFixed(1)}%`;
   changeLabel.classList.toggle('chart-down', change < 0);
-  rangeLabel.textContent = `${date(points[0][0])} — ${date(points.at(-1)[0])} · daily close`;
+  rangeLabel.textContent = `${date(points[0][0])} — ${date(points.at(-1)[0])} UTC`;
   chart.classList.remove('chart-message');
-  chart.innerHTML = `<svg viewBox="0 0 ${width} ${height}" preserveAspectRatio="none" role="img" aria-label="Token price trend over the last ${points.length} days, ${change >= 0 ? 'up' : 'down'} ${Math.abs(change).toFixed(1)} percent"><path class="chart-area" d="${area}"/><path class="chart-line" d="${line}"/><circle class="chart-endpoint" cx="${last.x.toFixed(1)}" cy="${last.y.toFixed(1)}" r="5"/></svg>`;
+  chart.innerHTML = `<svg viewBox="0 0 ${width} ${height}" preserveAspectRatio="none" role="img" aria-label="Token price trend over ${points.length} ${hourly ? 'hourly' : 'daily'} candles, ${change >= 0 ? 'up' : 'down'} ${Math.abs(change).toFixed(1)} percent"><path class="chart-area" d="${area}"/><path class="chart-line" d="${line}"/><circle class="chart-endpoint" cx="${last.x.toFixed(1)}" cy="${last.y.toFixed(1)}" r="5"/></svg>`;
 }
 
 for (const card of document.querySelectorAll('.launch-card[data-token]')) {
@@ -53,8 +60,8 @@ for (const card of document.querySelectorAll('.launch-card[data-token]')) {
     .then(data => {
       current.textContent = Number.isFinite(data.marketCap) ? currency.format(data.marketCap) : 'Unavailable';
       peak.textContent = Number.isFinite(data.peakMarketCap) ? currency.format(data.peakMarketCap) : 'Unavailable';
-      peak.title = `Estimated from on-chain DEX candles. Highest day: ${data.peakCandleUtc.slice(0, 10)} UTC`;
-      renderPriceChart(card, data.priceHistory);
+      peak.title = `Estimated from on-chain DEX candles. Highest ${data.interval === 'hour' ? 'hour' : 'day'}: ${data.peakCandleUtc.slice(0, data.interval === 'hour' ? 16 : 10)} UTC`;
+      renderPriceChart(card, data.priceHistory, data.interval);
     })
     .catch(() => {
       current.textContent = 'Unavailable';
