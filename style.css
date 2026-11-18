@@ -487,21 +487,18 @@ a:hover {
     flex-shrink: 0;
 }
 
-.whoaped-card .project-link {
-    min-width: 40px;
-    min-height: 40px;
-    justify-content: center;
-}
+@media (pointer: coarse) {
+    .whoaped-card .project-link {
+        min-width: 40px;
+        min-height: 40px;
+        justify-content: center;
+    }
 
-.whoaped-card .project-link svg {
-    width: 18px;
-    height: 18px;
-}
-
-.whoaped-card .label-token {
-    display: inline-flex;
-    align-items: center;
-    min-height: 40px;
+    .whoaped-card .label-token {
+        display: inline-flex;
+        align-items: center;
+        min-height: 40px;
+    }
 }
 
 .whoaped-card .project-link:focus-visible,
