@@ -1,6 +1,7 @@
 const TOKENS = Object.freeze({
   wbcE7iMmWN1XGEa6mtgRS3FoLgc936rMJYjeujapump: '7LANrQamVd2VuAAuvUCkJu19iwqLc3DeBwVHP18XsNmh',
   AFkMcpbnwEg328181CCresbTTG52DexwKM7FFo9Hpump: 'FKq5EtVeChSTXmWW7XwDKgkvsGMYvcboB7kDkMARFVUD',
+  DhLqheMQTimWUHdiQ2NR4jdLuhnrxHmFJ2ofMpdipump: '95wp7A3Z7dE7Wrv4tuuCgazymzyTD4TtDe7AefcPSrxQ',
   KxHGHaXXb1rtkUvZ4SNG5Xv1n1fNWJv4nWEBndppump: '5NTSdZzLs7N5eLbi4UjEPzUott3NgRSrYFNfKto6eNVw',
   '6Q5t5upWJwDocysAwR2zertE2EPxB3X1ek1HRoj4LUM': '2uoYsP4YxsSfdXj5NYQszsZQbW77J2ZHz4N8KV2sgbZL',
 });
@@ -8,7 +9,10 @@ const TOKENS = Object.freeze({
 const API = 'https://api.geckoterminal.com/api/v2/networks/solana';
 const headers = { Accept: 'application/json;version=20230203' };
 const LUMEN = '6Q5t5upWJwDocysAwR2zertE2EPxB3X1ek1HRoj4LUM';
-const WHOAPED = 'AFkMcpbnwEg328181CCresbTTG52DexwKM7FFo9Hpump';
+const INTRADAY_TOKENS = new Set([
+  'AFkMcpbnwEg328181CCresbTTG52DexwKM7FFo9Hpump',
+  'DhLqheMQTimWUHdiQ2NR4jdLuhnrxHmFJ2ofMpdipump',
+]);
 // Historical on-chain-derived daily market-cap snapshot from CoinGecko, 2026-11-15.
 // The free GeckoTerminal OHLCV API exposes only the latest 180 days for this older token.
 const lumenHistoricalFloor = { value: 291533.11273338075, at: '2025-12-28T00:00:00.000Z' };
@@ -31,12 +35,13 @@ module.exports = async function handler(req, res) {
   const address = new URL(req.url, 'https://heymike.io').searchParams.get('token');
   if (!Object.hasOwn(TOKENS, address)) return res.status(400).json({ error: 'Unknown Factory token' });
   const pool = TOKENS[address];
+  const hasIntraday = INTRADAY_TOKENS.has(address);
 
   try {
     const [tokenResult, dailyResult, hourlyResult, lumenHistory] = await Promise.all([
       getJson(`${API}/tokens/${address}`),
       getJson(`${API}/pools/${pool}/ohlcv/day?aggregate=1&limit=1000&currency=usd&token=base`),
-      address === WHOAPED
+      hasIntraday
         ? getJson(`${API}/pools/${pool}/ohlcv/hour?aggregate=1&limit=720&currency=usd&token=base`).catch(() => null)
         : Promise.resolve(null),
       address === LUMEN
@@ -53,7 +58,7 @@ module.exports = async function handler(req, res) {
     if (dailyResult.meta?.base?.address !== address || !Number.isFinite(supply) || supply <= 0 || !Array.isArray(dailyCandles) || !dailyCandles.length) {
       throw new Error('Incomplete token or pool history');
     }
-    const interval = address === WHOAPED && dailyCandles.length < 7 && hourlyCandles.length >= 2 ? 'hour' : 'day';
+    const interval = hasIntraday && dailyCandles.length < 7 && hourlyCandles.length >= 2 ? 'hour' : 'day';
     const chartCandles = interval === 'hour' ? hourlyCandles : dailyCandles;
 
     const highest = [...dailyCandles, ...hourlyCandles].reduce((best, candle) =>
@@ -89,7 +94,7 @@ module.exports = async function handler(req, res) {
         : historical.value > indexedPeak ? historical.at : new Date(Number(highest[0]) * 1000).toISOString(),
       method: address === LUMEN
         ? 'Maximum of primary-pool on-chain candle estimate and CoinGecko historical market-cap series'
-        : `Highest USD ${address === WHOAPED ? 'daily or hourly' : 'daily'} candle in primary on-chain pool × current reported token supply`,
+        : `Highest USD ${hasIntraday ? 'daily or hourly' : 'daily'} candle in primary on-chain pool × current reported token supply`,
       source: historical.value > indexedPeak
         ? 'https://www.coingecko.com/en/coins/lumen/historical_data'
         : `https://www.geckoterminal.com/solana/pools/${pool}`,
